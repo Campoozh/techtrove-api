@@ -46,7 +46,7 @@ class AuthController extends Controller
             if($checkPassword){
                 $token = $userResponse->createToken('token')->plainTextToken;
 
-                return ResponseBuilder::success('User logged in successfully', ['token'=> $token, 'user'=> $userResponse->toArray()], 201);
+                return ResponseBuilder::success('User logged in successfully', ['token'=> $token, 'user'=> $userResponse->toArray()], 200);
             } else {
 
                 return ResponseBuilder::error('The password provided is incorrect.', [], 401);
