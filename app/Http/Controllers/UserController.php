@@ -26,21 +26,6 @@ class UserController extends Controller
         return ResponseBuilder::sendData($users);
     }
 
-    function store(UserStoreRequest $request): JsonResponse
-    {
-        try {
-
-            $user = $this->userService->store($request->validated());
-
-            return ResponseBuilder::success('User created successfully', $user->toArray(), 201);
-
-        }catch (\Exception $error){
-
-            return ResponseBuilder::error('There was an error creating the user.', $error->getMessage(), 500);
-
-        }
-    }
-
     function show(string $id): JsonResponse
     {
         // TODO: Refactor this
@@ -90,7 +75,7 @@ class UserController extends Controller
         }
     }
 
-    function delete(string $id): JsonResponse
+    function destroy(string $id): JsonResponse
     {
 
         // TODO: Refactor this

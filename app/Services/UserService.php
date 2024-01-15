@@ -27,6 +27,14 @@ class UserService implements UserServiceInterface
         } else return 'Invalid ID format.';
     }
 
+    public function getUserByEmail(string $email): User|string
+    {
+        $user = User::where('email', $email);
+
+        if ($user->exists()) return $user->first();
+        else return 'The user was not found.';
+    }
+
     public function store($payload): User
     {
         $payload = [

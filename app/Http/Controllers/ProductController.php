@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
-use App\Http\Requests\User\UserUpdateRequest;
 use App\Interfaces\ProductServiceInterface;
-use App\Models\Product;
-use App\Models\User;
-use App\Utility\ResponseBuilder;
 use Illuminate\Http\JsonResponse;
+use App\Utility\ResponseBuilder;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -90,7 +88,7 @@ class ProductController extends Controller
         }
     }
 
-    function delete(string $id): JsonResponse
+    function destroy(string $id): JsonResponse
     {
 
         // TODO: Refactor this

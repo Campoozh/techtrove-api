@@ -70,7 +70,7 @@ class CategoryController extends Controller
 
     }
 
-    function delete(string $id): JsonResponse
+    function destroy(string $id): JsonResponse
     {
 
         // TODO: Refactor this
