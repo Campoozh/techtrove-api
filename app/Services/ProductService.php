@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Requests\Product\ProductUpdateRequest;
+use App\Http\Resources\ProductResource;
 use App\Interfaces\ProductServiceInterface;
 use App\Models\Product;
-use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid as UuidValidator;
 
 class ProductService implements ProductServiceInterface
@@ -15,16 +16,23 @@ class ProductService implements ProductServiceInterface
         return Product::all()->toArray();
     }
 
-    public function getProductById(string $id): Product|string
+    /**
+     * @throws NotFoundException
+     */
+    public function getProductById(string $id): Product
     {
-        if (UuidValidator::isValid($id)) {
+        if (!UuidValidator::isValid($id)) throw new \InvalidArgumentException('Invalid ID format. Should be UUID.', 400);
 
-            $product = Product::where('id', $id);
+        $product = Product::with('category')->where('id', $id);
 
-            if ($product->exists()) return $product->first();
-            else return 'The product was not found.';
+        if(!$product->exists()) throw new NotFoundException('Product was not found.');
 
-        } else return 'Invalid ID format.';
+        return $product->get()->first();
+    }
+
+    public function productToResponse(Product $product): ProductResource
+    {
+        return new ProductResource($product);
     }
 
     public function store($payload): Product
@@ -36,17 +44,17 @@ class ProductService implements ProductServiceInterface
         return Product::create($data);
     }
 
-    public function update(ProductUpdateRequest $request, string $id): array
+    public function update(ProductUpdateRequest $request, string $id): Product
     {
-        $user = $this->getProductById($id);
+        $product = $this->getProductById($id);
 
         $payload = $request->only([
             'title', 'description', 'price', 'image_url', 'category_id', 'is_available'
         ]);
 
-        $user->update($payload);
+        $product->update($payload);
 
-        return $user->toArray();
+        return $product;
     }
 
     public function delete(string $id): bool

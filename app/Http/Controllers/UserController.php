@@ -28,76 +28,45 @@ class UserController extends Controller
 
     function show(string $id): JsonResponse
     {
-        // TODO: Refactor this
-        $userResponse = $this->userService->getUserById($id);
+        try {
 
-        if($userResponse instanceof User){
-            try {
+            $user = $this->userService->getUserById($id);
 
-                $user = $this->userService->getUserById($id);
+            return ResponseBuilder::sendData($user->toArray());
 
-                return ResponseBuilder::sendData($user->toArray());
+        } catch (\Exception $error){
 
-            } catch (\Exception $error){
-
-                return ResponseBuilder::error('An error occurred when attempting to update the product.', $error->getMessage(), 500);
-
-            }
-        } else {
-
-            return ResponseBuilder::error('An error occurred when attempting to retrieve the product.', $userResponse, 404);
+            return ResponseBuilder::error('An error occurred when attempting to update the product.', $error->getMessage(), $error->getCode());
 
         }
     }
 
     function update(UserUpdateRequest $request, string $id): JsonResponse
     {
-        // TODO: Refactor this
-        $userResponse = $this->userService->getUserById($id);
+        try {
 
-        if($userResponse instanceof User){
+            $updatedUser = $this->userService->update($request, $id);
 
-            try {
+            return ResponseBuilder::success('User updated successfully', $updatedUser);
 
-                $user = $this->userService->update($request, $id);
+        } catch (\Exception $error){
 
-                return ResponseBuilder::success('User updated successfully', $user);
-
-            } catch (\Exception $error){
-
-                return ResponseBuilder::error('An error occurred when attempting to update the user.', $error->getMessage(), 500);
-
-            }
-        } else {
-
-            return ResponseBuilder::error('An error occurred when attempting to update the user.', $userResponse, 404);
+            return ResponseBuilder::error('An error occurred when attempting to update the user.', $error->getMessage(), $error->getCode());
 
         }
     }
 
     function destroy(string $id): JsonResponse
     {
+        try {
 
-        // TODO: Refactor this
-        $userResponse = $this->userService->getUserById($id);
+            $this->userService->delete($id);
 
-        if($userResponse instanceof User){
+            return ResponseBuilder::success('User deleted successfully');
 
-            try {
+        } catch (\Exception $error){
 
-                $this->userService->delete($id);
-
-                return ResponseBuilder::success('User deleted successfully');
-
-
-            } catch (\Exception $error){
-
-                return ResponseBuilder::error('An error occurred when attempting to delete the user.', $error->getMessage(), 500);
-
-            }
-        } else {
-
-            return ResponseBuilder::error('An error occurred when attempting to delete the user.', $userResponse, 404);
+            return ResponseBuilder::error('An error occurred when attempting to delete the user.', $error->getMessage(), $error->getCode());
 
         }
     }

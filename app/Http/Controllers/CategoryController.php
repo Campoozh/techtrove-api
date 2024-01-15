@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
 {
-
     protected CategoryServiceInterface $categoryService;
 
     public function __construct(CategoryServiceInterface $categoryService)
@@ -32,66 +31,41 @@ class CategoryController extends Controller
 
             $category = $this->categoryService->store($request);
 
-            ResponseBuilder::success('Category created successfully', $category);
+            return ResponseBuilder::success('Category created successfully', $category, 201);
 
         } catch (\Exception $error){
 
             return ResponseBuilder::error('An error occurred when trying to create the category.', $error->getMessage(), 500);
 
         }
-
-        return response()->json($category, 201);
     }
 
     function update(CategoryUpdateRequest $request, string $id): JsonResponse
     {
+        try {
 
-        // TODO: Refactor this
-        $categoryResponse = $this->categoryService->getCategoryById($id);
+            $updatedCategory = $this->categoryService->update($request, $id);
 
-        if($categoryResponse instanceof Category){
+            return ResponseBuilder::success('Category updated successfully', $updatedCategory);
 
-            try {
+        } catch (\Exception $error){
 
-                $this->categoryService->update($request, $id);
-
-                return ResponseBuilder::success('Category updated successfully');
-
-            } catch (\Exception $error){
-
-                return ResponseBuilder::error('An error occurred when attempting to update the category.', $error->getMessage(), 500);
-
-            }
-        } else {
-
-            return ResponseBuilder::error('An error occurred when attempting to update the category.', $categoryResponse, 404);
+            return ResponseBuilder::error('An error occurred when attempting to update the category.', $error->getMessage(), $error->getCode());
 
         }
-
     }
 
     function destroy(string $id): JsonResponse
     {
+        try {
 
-        // TODO: Refactor this
-        $categoryResponse = $this->categoryService->getCategoryById($id);
+            $this->categoryService->delete($id);
 
-        if($categoryResponse instanceof Category){
+            return ResponseBuilder::success('Category deleted successfully');
 
-            try {
+        } catch (\Exception $error){
 
-                $this->categoryService->delete($id);
-
-                return ResponseBuilder::success('Category deleted successfully');
-
-            } catch (\Exception $error){
-
-                return ResponseBuilder::error('An error occurred when attempting to delete the category.', $error->getMessage(), 500);
-
-            }
-        } else {
-
-            return ResponseBuilder::error('An error occurred when attempting to delete the category.', $categoryResponse, 404);
+            return ResponseBuilder::error('An error occurred when attempting to delete the category.', $error->getMessage(), $error->getCode());
 
         }
     }

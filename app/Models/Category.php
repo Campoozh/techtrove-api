@@ -18,7 +18,9 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+    protected $keyType = 'string';
     protected $casts = ['id' => 'string'];
+    public $timestamps = false;
 
     protected static function boot(): void
     {

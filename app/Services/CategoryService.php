@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Requests\Category\CategoryStoreRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
 use App\Interfaces\CategoryServiceInterface;
@@ -15,16 +16,15 @@ class CategoryService implements CategoryServiceInterface
         return Category::all()->toArray();
     }
 
-    public function getCategoryById(string $id): Category|string
+    public function getCategoryById(string $id): Category
     {
-        if (UuidValidator::isValid($id)) {
+        if (!UuidValidator::isValid($id)) throw new \InvalidArgumentException('Invalid ID format. Should be UUID.', 400);
 
-            $category = Category::where('id', $id);
+        $category = Category::where('id', $id);
 
-            if ($category->exists()) return $category->first();
-            else return 'The category was not found.';
+        if (!$category->exists()) throw new NotFoundException('Category was not found.', 404);
 
-        } else return 'Invalid ID format.';
+        return $category->get()->first();
     }
 
     public function store(CategoryStoreRequest $request): array

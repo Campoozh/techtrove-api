@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Interfaces\UserServiceInterface;
 use App\Models\User;
@@ -17,14 +18,14 @@ class UserService implements UserServiceInterface
 
     public function getUserById(string $id): User|string
     {
-        if (UuidValidator::isValid($id)) {
+        if (!UuidValidator::isValid($id)) throw new \InvalidArgumentException('Invalid ID format. Should be UUID.', 400);
 
-            $user = User::where('id', $id);
+        $user = User::where('id', $id);
 
-            if ($user->exists()) return $user->first();
-            else return 'The user was not found.';
+        if (!$user->exists()) throw new NotFoundException('User was not found.', 404);
 
-        } else return 'Invalid ID format.';
+        return $user->get()->first();
+
     }
 
     public function getUserByEmail(string $email): User|string

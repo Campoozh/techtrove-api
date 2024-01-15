@@ -21,13 +21,13 @@ Route::apiResource('products', ProductController::class);
 //Route::put('products/{id}', [ProductController::class, 'update']);
 //Route::delete('products/{id}', [ProductController::class, 'delete']);
 
-Route::apiResource('categories', CategoryController::class);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
 //Route::get('categories', [CategoryController::class, 'index']);
 //Route::post('categories', [CategoryController::class, 'store']);
 //Route::put('categories/{id}', [CategoryController::class, 'update']);
 //Route::delete('categories/{id}', [CategoryController::class, 'delete']);
 
-Route::apiResource('users', UserController::class)->only(['index', 'show', 'update','delete']);
+Route::apiResource('users', UserController::class)->only(['index', 'show', 'update','destroy']);
 //Route::get('users', [UserController::class, 'index']);
 //Route::post('users', [UserController::class, 'store']);
 //Route::get('users/{id}', [UserController::class, 'show']);
