@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\NotFoundException;
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Interfaces\ProductServiceInterface;
-use App\Models\Product;
 use App\Utility\ResponseBuilder;
 use Illuminate\Http\JsonResponse;
 
@@ -32,11 +30,13 @@ class ProductController extends Controller
 
             $product = $this->productService->store($request);
 
-            return ResponseBuilder::success('Product created successfully', $product->toArray(), 201);
+            $responseProduct = $this->productService->productToResponse($product)->resolve();
+
+            return ResponseBuilder::success('Product created successfully', $responseProduct, 201);
 
         } catch (\Exception $error){
 
-            return ResponseBuilder::error('An error occurred when trying to create the product.', $error->getMessage(), 500);
+            return ResponseBuilder::error('An error occurred when trying to create the product.', $error->getMessage(), $error->getCode());
 
         }
     }

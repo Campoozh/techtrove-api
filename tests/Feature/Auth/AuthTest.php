@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -67,4 +67,5 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200);
     }
+
 }

@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\ProductController;
 use \App\Http\Controllers\CategoryController;
 use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\AuthController;
+use \App\Http\Controllers\OrderController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -33,5 +33,7 @@ Route::apiResource('users', UserController::class)->only(['index', 'show', 'upda
 //Route::get('users/{id}', [UserController::class, 'show']);
 //Route::put('users/{id}', [UserController::class, 'update']);
 //Route::delete('users/{id}', [UserController::class, 'delete']);
+
+Route::apiResource('orders', OrderController::class);
 
 

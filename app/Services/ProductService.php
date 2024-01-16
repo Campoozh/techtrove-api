@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
+use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Interfaces\ProductServiceInterface;
@@ -35,9 +36,9 @@ class ProductService implements ProductServiceInterface
         return new ProductResource($product);
     }
 
-    public function store($payload): Product
+    public function store(ProductStoreRequest $request): Product
     {
-        $data = $payload->only([
+        $data = $request->only([
             'title', 'description', 'price', 'image_url', 'category_id', 'is_available'
         ]);
 

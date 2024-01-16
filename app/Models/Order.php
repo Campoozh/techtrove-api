@@ -10,24 +10,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 /**
- * Product
+ * Order
  *
  * @mixin Builder
  */
-class Product extends Model
+class Order extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $fillable = [
-        'title',
-        'description',
-        'price',
-        'image_url',
-        'category_id',
-        'is_available'
+        'user_id',
+        'total',
     ];
+
     protected $casts = ['id' => 'string'];
+    protected $keyType = 'string';
 
     protected static function boot(): void
     {
@@ -39,14 +36,15 @@ class Product extends Model
         });
     }
 
-    public function category(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function orders(): BelongsToMany
+    public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id');
+        return $this->belongsToMany(Product::class, 'order_product', 'order_id', 'product_id')
+            ->withPivot(['quantity', 'price']);
     }
 
 }

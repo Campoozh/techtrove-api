@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Utility\ResponseBuilder;
-use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Interfaces\UserServiceInterface;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller

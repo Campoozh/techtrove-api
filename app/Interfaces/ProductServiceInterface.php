@@ -19,13 +19,9 @@ interface ProductServiceInterface
      */
     public function getProductById(string $id): Product;
 
-    /**
-     * @throws NotFoundException
-     * @throws InvalidArgumentException
-    */
     public function productToResponse(Product $product): ProductResource;
 
-    public function store(ProductStoreRequest $payload): Product;
+    public function store(ProductStoreRequest $request): Product;
 
     /**
      * @throws NotFoundException
