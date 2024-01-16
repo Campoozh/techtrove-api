@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Category;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CategoryStoreRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
 use App\Interfaces\CategoryServiceInterface;
-use App\Models\Category;
 use App\Utility\ResponseBuilder;
 use Illuminate\Http\JsonResponse;
 

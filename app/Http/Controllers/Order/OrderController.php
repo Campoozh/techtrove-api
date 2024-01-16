@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Order;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderRequest;
 use App\Interfaces\OrderServiceInterface;
 use App\Utility\ResponseBuilder;

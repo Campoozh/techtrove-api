@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthSignInRequest;
 use App\Http\Requests\Auth\AuthSignUpRequest;
 use App\Interfaces\UserServiceInterface;
-use App\Models\User;
 use App\Utility\ResponseBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    protected UserServiceInterface $userService;
 
     public function __construct(UserServiceInterface $userService)
     {

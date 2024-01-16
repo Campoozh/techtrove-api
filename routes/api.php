@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\ProductController;
-use \App\Http\Controllers\CategoryController;
-use \App\Http\Controllers\UserController;
-use \App\Http\Controllers\AuthController;
-use \App\Http\Controllers\OrderController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
