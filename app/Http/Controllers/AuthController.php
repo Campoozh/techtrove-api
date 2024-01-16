@@ -26,7 +26,9 @@ class AuthController extends Controller
 
             $token = $user->createToken('token')->plainTextToken;
 
-            return ResponseBuilder::success('User created successfully', ['token'=> $token, 'user'=> $user->toArray()], 201);
+            $responseUser = $this->userService->userToResponse($user);
+
+            return ResponseBuilder::success('User created successfully', ['token'=> $token, 'user'=> $responseUser], 201);
 
         }catch (\Exception $error){
 
@@ -37,24 +39,22 @@ class AuthController extends Controller
 
     function signIn(AuthSignInRequest $request): JsonResponse
     {
-        $userResponse = $this->userService->getUserByEmail($request->email);
+        try {
 
-        if($userResponse instanceof User){
+            $user = $this->userService->getUserByEmail($request->email);
 
-            $checkPassword = Hash::check($request->password, $userResponse->password_hash);
+            $token = $user->createToken('token')->plainTextToken;
 
-            if($checkPassword){
-                $token = $userResponse->createToken('token')->plainTextToken;
+            $responseUser = $this->userService->userToResponse($user);
 
-                return ResponseBuilder::success('User logged in successfully', ['token'=> $token, 'user'=> $userResponse->toArray()], 200);
-            } else {
+            if (!Hash::check($request->password, $user->password_hash))
+                return ResponseBuilder::error('There was an error when trying to login.', 'The password is incorrect.', 401);
 
-                return ResponseBuilder::error('The password provided is incorrect.', [], 401);
+            return ResponseBuilder::success('User logged in successfully', ['token'=> $token, 'user'=> $responseUser]);
 
-            }
-        } else {
+        } catch (\Exception $error) {
 
-            return ResponseBuilder::error('There was an error when trying to login.', $userResponse, 500);
+            return ResponseBuilder::error('There was an error when trying to login.', $error->getMessage(), $error->getCode());
 
         }
     }

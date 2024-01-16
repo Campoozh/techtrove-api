@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\Category\CategoryStoreRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
+use App\Http\Resources\CategoryResource;
 use App\Interfaces\CategoryServiceInterface;
 use App\Models\Category;
 use Ramsey\Uuid\Uuid as UuidValidator;
@@ -13,7 +14,9 @@ class CategoryService implements CategoryServiceInterface
 {
     public function getCategories(): array
     {
-        return Category::all()->toArray();
+        $categories = Category::all();
+
+        return CategoryResource::collection($categories)->resolve();
     }
 
     public function getCategoryById(string $id): Category
@@ -27,20 +30,25 @@ class CategoryService implements CategoryServiceInterface
         return $category->get()->first();
     }
 
-    public function store(CategoryStoreRequest $request): array
+    public function categoryToResponse(Category $category): CategoryResource
+    {
+        return new CategoryResource($category);
+    }
+
+    public function store(CategoryStoreRequest $request): Category
     {
         $payload = $request->only(['name']);
 
-        return Category::create($payload)->toArray();
+        return Category::create($payload);
     }
 
-    public function update(CategoryUpdateRequest $request, string $id): array
+    public function update(CategoryUpdateRequest $request, string $id): Category
     {
         $category = $this->getCategoryById($id);
 
         $category->update(["name" => $request['name']]);
 
-        return $category->toArray();
+        return $category;
     }
 
     public function delete(string $id): bool

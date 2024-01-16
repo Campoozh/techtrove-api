@@ -83,7 +83,6 @@ class ProductController extends Controller
 
             return ResponseBuilder::success('Product deleted successfully');
 
-
         } catch (\Exception $error){
 
             return ResponseBuilder::error('An error occurred when attempting to delete the product.', $error->getMessage(), $error->getCode());

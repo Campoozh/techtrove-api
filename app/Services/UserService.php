@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use App\Interfaces\UserServiceInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -13,10 +14,12 @@ class UserService implements UserServiceInterface
 
     public function getUsers(): array
     {
-        return User::all()->toArray();
+        $users = User::all();
+
+        return UserResource::collection($users)->resolve();
     }
 
-    public function getUserById(string $id): User|string
+    public function getUserById(string $id): User
     {
         if (!UuidValidator::isValid($id)) throw new \InvalidArgumentException('Invalid ID format. Should be UUID.', 400);
 
@@ -28,12 +31,18 @@ class UserService implements UserServiceInterface
 
     }
 
-    public function getUserByEmail(string $email): User|string
+    public function getUserByEmail(string $email): User
     {
         $user = User::where('email', $email);
 
-        if ($user->exists()) return $user->first();
-        else return 'The user was not found.';
+        if (!$user->exists()) throw new NotFoundException('User was not found.', 404);
+
+        return $user->get()->first();
+    }
+
+    public function userToResponse(User $user): UserResource
+    {
+        return new UserResource($user);
     }
 
     public function store($payload): User

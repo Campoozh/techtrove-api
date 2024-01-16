@@ -14,7 +14,9 @@ class ProductService implements ProductServiceInterface
 {
     public function getProducts(): array
     {
-        return Product::all()->toArray();
+        $products = Product::with('category')->get();
+
+        return ProductResource::collection($products)->resolve();
     }
 
     /**
@@ -42,7 +44,9 @@ class ProductService implements ProductServiceInterface
             'title', 'description', 'price', 'image_url', 'category_id', 'is_available'
         ]);
 
-        return Product::create($data);
+        $product = Product::create($data);
+
+        return $product->load('category');
     }
 
     public function update(ProductUpdateRequest $request, string $id): Product

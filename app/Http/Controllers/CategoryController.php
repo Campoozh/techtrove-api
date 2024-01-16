@@ -31,7 +31,9 @@ class CategoryController extends Controller
 
             $category = $this->categoryService->store($request);
 
-            return ResponseBuilder::success('Category created successfully', $category, 201);
+            $responseCategory = $this->categoryService->categoryToResponse($category)->resolve();
+
+            return ResponseBuilder::success('Category created successfully', $responseCategory, 201);
 
         } catch (\Exception $error){
 
@@ -46,7 +48,9 @@ class CategoryController extends Controller
 
             $updatedCategory = $this->categoryService->update($request, $id);
 
-            return ResponseBuilder::success('Category updated successfully', $updatedCategory);
+            $responseCategory = $this->categoryService->categoryToResponse($updatedCategory)->resolve();
+
+            return ResponseBuilder::success('Category updated successfully', $responseCategory);
 
         } catch (\Exception $error){
 
