@@ -32,6 +32,22 @@ class OrderService implements OrderServiceInterface
         return $order->get()->first();
     }
 
+    public function getUserOrders(string $userId): array
+    {
+        if (!UuidValidator::isValid($userId)) throw new \InvalidArgumentException('Invalid ID format. Should be UUID.', 400);
+
+        $userOrders = Order::with('products')->where('user_id', $userId);
+
+        if(!$userOrders->exists()) throw new NotFoundException('User orders were not found.');
+
+        $userOrdersResponse = [];
+
+        foreach ($userOrders->get() as $order)
+            $userOrdersResponse[] = new OrderResource($order);
+
+        return $userOrdersResponse;
+    }
+
     public function orderToResponse(Order $order): OrderResource
     {
         return new OrderResource($order);
@@ -49,12 +65,10 @@ class OrderService implements OrderServiceInterface
         $products = [];
 
         foreach ($requestProducts as $product) {
-
             $products[] = [
                 "order_id" => $order->id,
                 "product_id" => $product['product_id'],
                 "quantity" => $product['quantity'],
-                "price" => $product['price']
             ];
 
         }
@@ -70,12 +84,15 @@ class OrderService implements OrderServiceInterface
 
         $order->update($request->only(['total']));
 
+        $order->products()->detach();
+
         foreach ($request->products as $product) {
-            $order->products()->updateExistingPivot($product['product_id'], [
+            $order->products()->attach($product['product_id'], [
                 'quantity' => $product['quantity'],
-                'price' => $product['price']
             ]);
         }
+
+        $order->load('products');
 
         return $order;
     }

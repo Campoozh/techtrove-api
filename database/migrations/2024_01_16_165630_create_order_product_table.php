@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignUuid('order_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('product_id')->constrained();
             $table->integer('quantity');
-            $table->double('price');
         });
     }
 

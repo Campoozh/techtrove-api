@@ -35,5 +35,6 @@ Route::apiResource('users', UserController::class)->only(['index', 'show', 'upda
 //Route::delete('users/{id}', [UserController::class, 'delete']);
 
 Route::apiResource('orders', OrderController::class);
+Route::get('orders/user/{userId}', [OrderController::class, 'showUserOrders']);
 
 

@@ -42,6 +42,21 @@ class OrderController extends Controller
         }
     }
 
+    public function showUserOrders(string $userId): JsonResponse
+    {
+        try {
+
+            $orders = $this->orderService->getUserOrders($userId);
+
+            return ResponseBuilder::sendData($orders);
+
+        } catch (\Exception $error) {
+
+            return ResponseBuilder::error('An error occurred when trying to retrieve the order', $error->getMessage(), 400);
+
+        }
+    }
+
     public function store(OrderRequest $request): JsonResponse
     {
         try {
@@ -67,11 +82,11 @@ class OrderController extends Controller
 
             $responseOrder = $this->orderService->orderToResponse($updatedOrder)->resolve();
 
-            return ResponseBuilder::success('Order updated successfully',$responseOrder, 201);
+            return ResponseBuilder::success('Order updated successfully',$responseOrder);
 
         } catch (\Exception $error) {
 
-            return ResponseBuilder::error('An error occurred when trying to update the order', $error->getMessage(), 400);
+            return ResponseBuilder::error('An error occurred when trying to update the order', $error->getMessage());
 
         }
     }
