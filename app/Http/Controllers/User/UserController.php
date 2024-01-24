@@ -22,6 +22,8 @@ class UserController extends Controller
     {
         $users = $this->userService->getUsers();
 
+
+
         return ResponseBuilder::sendData($users);
     }
 
@@ -31,7 +33,9 @@ class UserController extends Controller
 
             $user = $this->userService->getUserById($id);
 
-            return ResponseBuilder::sendData($user->toArray());
+            $responseUser = $this->userService->userToResponse($user)->resolve();
+
+            return ResponseBuilder::sendData($responseUser);
 
         } catch (\Exception $error){
 
@@ -46,7 +50,9 @@ class UserController extends Controller
 
             $updatedUser = $this->userService->update($request, $id);
 
-            return ResponseBuilder::success('User updated successfully', $updatedUser);
+            $responseUser = $this->userService->userToResponse($updatedUser)->resolve();
+
+            return ResponseBuilder::success('User updated successfully', $responseUser);
 
         } catch (\Exception $error){
 

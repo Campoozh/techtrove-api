@@ -56,7 +56,7 @@ class UserService implements UserServiceInterface
         return User::create($payload);
     }
 
-    public function update(UserUpdateRequest $payload, string $id): array
+    public function update(UserUpdateRequest $payload, string $id): User
     {
         $user = $this->getUserById($id);
 
@@ -68,7 +68,7 @@ class UserService implements UserServiceInterface
 
         $user->update($payload);
 
-        return $user->toArray();
+        return $user;
     }
 
     public function delete(string $id): void

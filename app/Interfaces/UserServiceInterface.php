@@ -33,7 +33,7 @@ interface UserServiceInterface
      * @throws NotFoundException
      * @throws InvalidArgumentException
      */
-    public function update(UserUpdateRequest $payload, string $id): array;
+    public function update(UserUpdateRequest $payload, string $id): User;
 
     /**
      * @throws NotFoundException
