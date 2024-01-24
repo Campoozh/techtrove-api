@@ -9,32 +9,40 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::apiResource('products', ProductController::class)->only(['store', 'update','destroy']);
+//    Route::post('products', [ProductController::class, 'store']);
+//    Route::put('products/{id}', [ProductController::class, 'update']);
+//    Route::delete('products/{id}', [ProductController::class, 'destroy']);
+
+    Route::apiResource('users', UserController::class)->only(['store', 'update','destroy']);
+//    Route::post('users', [UserController::class, 'store']);
+//    Route::put('users/{id}', [UserController::class, 'update']);
+//    Route::delete('users/{id}', [UserController::class, 'destroy']);
+
+    Route::apiResource('categories', CategoryController::class)->only(['store', 'update', 'destroy']);
+//    Route::post('categories', [CategoryController::class, 'store']);
+//    Route::put('categories/{id}', [CategoryController::class, 'update']);
+//    Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
+
+    Route::apiResource('orders', OrderController::class)->only(['store', 'update', 'destroy']);
 });
 
 Route::post('/login', [AuthController::class, 'signIn']);
 Route::post('/register', [AuthController::class, 'signUp']);
 
-Route::apiResource('products', ProductController::class);
-//Route::get('products', [ProductController::class, 'index']);
-//Route::post('products', [ProductController::class, 'store']);
-//Route::get('products/{id}', [ProductController::class, 'show']);
-//Route::put('products/{id}', [ProductController::class, 'update']);
-//Route::delete('products/{id}', [ProductController::class, 'delete']);
+Route::get('products', [ProductController::class, 'index']);
+Route::get('products/{id}', [ProductController::class, 'show']);
 
-Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
-//Route::get('categories', [CategoryController::class, 'index']);
-//Route::post('categories', [CategoryController::class, 'store']);
-//Route::put('categories/{id}', [CategoryController::class, 'update']);
-//Route::delete('categories/{id}', [CategoryController::class, 'delete']);
+Route::get('categories', [CategoryController::class, 'index']);
 
-Route::apiResource('users', UserController::class)->only(['index', 'show', 'update','destroy']);
-//Route::get('users', [UserController::class, 'index']);
-//Route::post('users', [UserController::class, 'store']);
-//Route::get('users/{id}', [UserController::class, 'show']);
-//Route::put('users/{id}', [UserController::class, 'update']);
-//Route::delete('users/{id}', [UserController::class, 'delete']);
+Route::get('users', [UserController::class, 'index']);
+Route::get('users/{id}', [UserController::class, 'show']);
 
-Route::apiResource('orders', OrderController::class);
+Route::get('orders', [OrderController::class, 'index']);
+Route::get('orders/{id}', [OrderController::class, 'show']);
 Route::get('orders/user/{userId}', [OrderController::class, 'showUserOrders']);
+
+
 
 
