@@ -24,7 +24,7 @@ class CategoryUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:50'],
+            'name' => ['required', 'string', 'min:2', 'max:30', 'distinct', 'filled', 'unique:categories,name', 'regex:/^[a-zA-Z\s]+$/', 'not_regex:/[0-9]/', 'bail'],
         ];
     }
 

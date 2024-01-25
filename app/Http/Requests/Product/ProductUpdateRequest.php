@@ -25,12 +25,12 @@ class ProductUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:30'],
-            'description' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:30', 'not_in:Admin,Manager'],
+            'description' => ['required', 'string', 'max:255', 'bail'],
             'price' => ['required', new Double()],
             'image_url' => ['required', 'string', 'max:255'],
-            'category_id' => ['required', 'exists:categories,id'],
-            'is_available' => ['boolean']
+            'category_id' => ['required', 'exists:categories,id', 'uuid'],
+            'is_available' => ['boolean', 'nullable', 'in:true,false,1,0']
         ];
     }
 
