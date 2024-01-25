@@ -4,15 +4,19 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Interfaces\ModelServiceInterface;
 use App\Interfaces\UserServiceInterface;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid as UuidValidator;
 
-class UserService implements UserServiceInterface
+class UserService implements UserServiceInterface, ModelServiceInterface
 {
 
-    public function getUsers(): array
+    public function getAll(): array
     {
         $users = User::all();
 
@@ -28,7 +32,6 @@ class UserService implements UserServiceInterface
         if (!$user->exists()) throw new NotFoundException('User was not found.', 404);
 
         return $user->get()->first();
-
     }
 
     public function getUserByEmail(string $email): User
@@ -40,30 +43,34 @@ class UserService implements UserServiceInterface
         return $user->get()->first();
     }
 
-    public function userToResponse(User $user): UserResource
+    public function formatToResponse(Model $model): JsonResource
     {
-        return new UserResource($user);
+        return new UserResource($model);
+
     }
 
-    public function store($payload): User
+    public function store(FormRequest $request): User
     {
+
+        $validatedRequest = $request->validated();
+
         $payload = [
-            'name' => $payload['name'],
-            'email' => $payload['email'],
-            'password_hash' => Hash::make($payload['password']),
+            'name' => $validatedRequest['name'],
+            'email' => $validatedRequest['email'],
+            'password_hash' => Hash::make($validatedRequest['password']),
         ];
 
         return User::create($payload);
     }
 
-    public function update(UserUpdateRequest $payload, string $id): User
+    public function update(FormRequest $request, string $id): User
     {
         $user = $this->getUserById($id);
 
         $payload = [
-            'name' => $payload['name'],
-            'email' => $payload['email'],
-            'password_hash' => Hash::make($payload['password']),
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password_hash' => Hash::make($request['password']),
         ];
 
         $user->update($payload);
@@ -71,10 +78,10 @@ class UserService implements UserServiceInterface
         return $user;
     }
 
-    public function delete(string $id): void
+    public function delete(string $id): bool
     {
         $user = $this->getUserById($id);
 
-        $user->delete();
+        return $user->delete();
     }
 }

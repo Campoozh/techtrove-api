@@ -10,9 +10,6 @@ use Illuminate\Testing\Exceptions\InvalidArgumentException;
 
 interface UserServiceInterface
 {
-
-    public function getUsers(): array;
-
     /**
      * @throws NotFoundException
      * @throws InvalidArgumentException
@@ -24,21 +21,5 @@ interface UserServiceInterface
      * @throws InvalidArgumentException
      */
     public function getUserByEmail(string $email): User;
-
-    public function userToResponse(User $user): UserResource;
-
-    public function store(array $payload): User;
-
-    /**
-     * @throws NotFoundException
-     * @throws InvalidArgumentException
-     */
-    public function update(UserUpdateRequest $payload, string $id): User;
-
-    /**
-     * @throws NotFoundException
-     * @throws InvalidArgumentException
-     */
-    public function delete(string $id): void;
 
 }

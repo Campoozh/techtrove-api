@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthSignInRequest;
 use App\Http\Requests\Auth\AuthSignUpRequest;
 use App\Interfaces\UserServiceInterface;
@@ -24,11 +23,11 @@ class AuthController extends Controller
     {
         try {
 
-            $user = $this->userService->store($request->validated());
+            $user = $this->userService->store($request);
 
             $token = $user->createToken('token')->plainTextToken;
 
-            $responseUser = $this->userService->userToResponse($user);
+            $responseUser = $this->userService->formatToResponse($user);
 
             return ResponseBuilder::success('User created successfully', ['token'=> $token, 'user'=> $responseUser], 201);
 
@@ -47,7 +46,7 @@ class AuthController extends Controller
 
             $token = $user->createToken('token')->plainTextToken;
 
-            $responseUser = $this->userService->userToResponse($user);
+            $responseUser = $this->userService->formatToResponse($user);
 
             if (!Hash::check($request->password, $user->password_hash))
                 return ResponseBuilder::error('There was an error when trying to login.', 'The password is incorrect.', 401);

@@ -17,7 +17,7 @@ class AuthSignUpRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'string', 'email', 'max:50', 'unique:users,email', 'not_in:admin@gmail.pt'],
             'password' => ['required', 'string', 'max:255'],
         ];
     }

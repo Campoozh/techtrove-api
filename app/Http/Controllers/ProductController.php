@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Product;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Interfaces\ProductServiceInterface;
@@ -20,7 +19,7 @@ class ProductController extends Controller
 
     function index(): JsonResponse {
 
-        $products = $this->productService->getProducts();
+        $products = $this->productService->getAll();
 
         return ResponseBuilder::sendData($products);
     }
@@ -31,7 +30,7 @@ class ProductController extends Controller
 
             $product = $this->productService->store($request);
 
-            $responseProduct = $this->productService->productToResponse($product)->resolve();
+            $responseProduct = $this->productService->formatToResponse($product)->resolve();
 
             return ResponseBuilder::success('Product created successfully', $responseProduct, 201);
 
@@ -48,7 +47,7 @@ class ProductController extends Controller
 
             $product = $this->productService->getProductById($id);
 
-            $responseProduct = $this->productService->productToResponse($product)->resolve();
+            $responseProduct = $this->productService->formatToResponse($product)->resolve();
 
             return ResponseBuilder::sendData($responseProduct);
 
@@ -65,7 +64,7 @@ class ProductController extends Controller
 
             $updatedProduct = $this->productService->update($request, $id);
 
-            $responseProduct = $this->productService->productToResponse($updatedProduct)->resolve();
+            $responseProduct = $this->productService->formatToResponse($updatedProduct)->resolve();
 
             return ResponseBuilder::success('Product updated successfully', $responseProduct);
 

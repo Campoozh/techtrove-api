@@ -7,12 +7,16 @@ use App\Http\Requests\Category\CategoryStoreRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
 use App\Http\Resources\CategoryResource;
 use App\Interfaces\CategoryServiceInterface;
+use App\Interfaces\ModelServiceInterface;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Ramsey\Uuid\Uuid as UuidValidator;
 
-class CategoryService implements CategoryServiceInterface
+class CategoryService implements CategoryServiceInterface, ModelServiceInterface
 {
-    public function getCategories(): array
+    public function getAll(): array
     {
         $categories = Category::all();
 
@@ -30,19 +34,20 @@ class CategoryService implements CategoryServiceInterface
         return $category->get()->first();
     }
 
-    public function categoryToResponse(Category $category): CategoryResource
+    public function formatToResponse(Model $model): JsonResource
     {
-        return new CategoryResource($category);
+        return new CategoryResource($model);
+
     }
 
-    public function store(CategoryStoreRequest $request): Category
+    public function store(FormRequest $request): Category
     {
         $payload = $request->only(['name']);
 
         return Category::create($payload);
     }
 
-    public function update(CategoryUpdateRequest $request, string $id): Category
+    public function update(FormRequest $request, string $id): Category
     {
         $category = $this->getCategoryById($id);
 

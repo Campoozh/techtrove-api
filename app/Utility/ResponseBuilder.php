@@ -12,7 +12,6 @@ class ResponseBuilder
      *
      * E também para deixar o controller mais "clean".
      */
-
     public static function success(string $message, array $data = [], int $statusCode = 200): JsonResponse
     {
         return response()->json(["status" => true, "message" => $message, "data" => $data ], $statusCode);

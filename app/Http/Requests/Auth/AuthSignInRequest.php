@@ -16,7 +16,7 @@ class AuthSignInRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'string', 'email', 'max:50', 'not_in:admin@gmail.pt'],
             'password' => ['required', 'string', 'max:255'],
         ];
     }

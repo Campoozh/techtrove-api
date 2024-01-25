@@ -5,16 +5,17 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Interfaces\ModelServiceInterface;
 use App\Interfaces\OrderServiceInterface;
 use App\Models\Order;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Ramsey\Uuid\Uuid as UuidValidator;
 
-//use App\Interfaces\OrderUpdateRequest;
-
-class OrderService implements OrderServiceInterface
+class OrderService implements OrderServiceInterface, ModelServiceInterface
 {
-
-    public function getOrders(): array
+    public function getAll(): array
     {
         $orders = Order::with('products')->get();
 
@@ -48,12 +49,12 @@ class OrderService implements OrderServiceInterface
         return $userOrdersResponse;
     }
 
-    public function orderToResponse(Order $order): OrderResource
+    public function formatToResponse(Model $model): JsonResource
     {
-        return new OrderResource($order);
+        return new OrderResource($model);
     }
 
-    public function store(OrderRequest $request): Order
+    public function store(FormRequest $request): Order
     {
 
         $orderPayload = $request->only(['user_id', 'total']);
@@ -78,7 +79,7 @@ class OrderService implements OrderServiceInterface
         return $order;
     }
 
-    public function update(OrderRequest $request, string $id): Order
+    public function update(FormRequest $request, string $id): Order
     {
         $order = $this->getOrderById($id);
 

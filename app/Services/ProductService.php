@@ -6,13 +6,17 @@ use App\Exceptions\NotFoundException;
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
+use App\Interfaces\ModelServiceInterface;
 use App\Interfaces\ProductServiceInterface;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Ramsey\Uuid\Uuid as UuidValidator;
 
-class ProductService implements ProductServiceInterface
+class ProductService implements ProductServiceInterface, ModelServiceInterface
 {
-    public function getProducts(): array
+    public function getAll(): array
     {
         $products = Product::with('category')->get();
 
@@ -33,12 +37,12 @@ class ProductService implements ProductServiceInterface
         return $product->get()->first();
     }
 
-    public function productToResponse(Product $product): ProductResource
+    public function formatToResponse(Model $model): JsonResource
     {
-        return new ProductResource($product);
+        return new ProductResource($model);
     }
 
-    public function store(ProductStoreRequest $request): Product
+    public function store(FormRequest $request): Product
     {
         $data = $request->only([
             'title', 'description', 'price', 'image_url', 'category_id', 'is_available'
@@ -49,7 +53,7 @@ class ProductService implements ProductServiceInterface
         return $product->load('category');
     }
 
-    public function update(ProductUpdateRequest $request, string $id): Product
+    public function update(FormRequest $request, string $id): Product
     {
         $product = $this->getProductById($id);
 

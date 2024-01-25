@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Category;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CategoryStoreRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
 use App\Interfaces\CategoryServiceInterface;
@@ -20,7 +19,7 @@ class CategoryController extends Controller
 
     function index(): JsonResponse
     {
-        $categories = $this->categoryService->getCategories();
+        $categories = $this->categoryService->getAll();
 
         return ResponseBuilder::sendData($categories);
     }
@@ -31,7 +30,7 @@ class CategoryController extends Controller
 
             $category = $this->categoryService->store($request);
 
-            $responseCategory = $this->categoryService->categoryToResponse($category)->resolve();
+            $responseCategory = $this->categoryService->formatToResponse($category)->resolve();
 
             return ResponseBuilder::success('Category created successfully', $responseCategory, 201);
 
@@ -48,7 +47,7 @@ class CategoryController extends Controller
 
             $updatedCategory = $this->categoryService->update($request, $id);
 
-            $responseCategory = $this->categoryService->categoryToResponse($updatedCategory)->resolve();
+            $responseCategory = $this->categoryService->formatToResponse($updatedCategory)->resolve();
 
             return ResponseBuilder::success('Category updated successfully', $responseCategory);
 

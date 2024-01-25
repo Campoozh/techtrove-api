@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Interfaces\UserServiceInterface;
 use App\Utility\ResponseBuilder;
@@ -20,7 +19,7 @@ class UserController extends Controller
 
     function index(): JsonResponse
     {
-        $users = $this->userService->getUsers();
+        $users = $this->userService->getAll();
 
 
 
@@ -33,7 +32,7 @@ class UserController extends Controller
 
             $user = $this->userService->getUserById($id);
 
-            $responseUser = $this->userService->userToResponse($user)->resolve();
+            $responseUser = $this->userService->formatToResponse($user)->resolve();
 
             return ResponseBuilder::sendData($responseUser);
 
@@ -50,7 +49,7 @@ class UserController extends Controller
 
             $updatedUser = $this->userService->update($request, $id);
 
-            $responseUser = $this->userService->userToResponse($updatedUser)->resolve();
+            $responseUser = $this->userService->formatToResponse($updatedUser)->resolve();
 
             return ResponseBuilder::success('User updated successfully', $responseUser);
 
